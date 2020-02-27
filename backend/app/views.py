@@ -29,4 +29,3 @@ def Rooms_View(request):
 def Test_Script(request):
     result = traverse_server()
     return Response(result)
-    
