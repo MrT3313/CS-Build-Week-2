@@ -7,12 +7,15 @@ from rest_framework.decorators import api_view
 from .models import Room
 from .serializers import RoomSerializer
 
+# Scripts
+from .scripts.traverse import traverse_server
+
 # Pre Installed
 from django.shortcuts import render
 
 # Create your views here.
 @api_view(['GET', ] )
-def Room_View(request):
+def Rooms_View(request):
     try: 
         rooms = Room.objects.all()
     except Room.DoesNotExist:
@@ -21,3 +24,9 @@ def Room_View(request):
     if request.method == 'GET':
         serializer = RoomSerializer(rooms, many=True)
         return Response(serializer.data)
+
+@api_view(['GET', ])
+def Test_Script(request):
+    result = traverse_server()
+    return Response(result)
+    

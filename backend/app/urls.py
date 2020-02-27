@@ -4,8 +4,11 @@ from . import api
 from . import views
 
 urlpatterns = [
+    # Testing
     url('test/', api.Test.as_view(), name='test'),
+    url('testScript/', views.Test_Script, name='testScript'),
+
+    # Project
     url('traverse/', api.Traverse.as_view(), name='traverse'),
-    # url('rooms/', api.GetRooms.as_view(), name='rooms'),
-    path('rooms/', views.Room_View, name='rooms')
+    path('rooms/', views.Rooms_View, name='rooms')
 ]

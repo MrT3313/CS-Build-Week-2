@@ -5,6 +5,7 @@ from django.contrib.gis.db import models
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.gis.geos import Point
 
+# TODO: Should I add a direction room => {'n_room': 37} / {'s_room': 35}
 
 # Create your models here.
 class Room(models.Model):
