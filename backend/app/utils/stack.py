@@ -1,7 +1,6 @@
 class Stack():
     def __init__(self):
         self.stack = []
-        self.size = 0
         
     def push(self, value):
         self.stack.append(value)
@@ -10,5 +9,12 @@ class Stack():
             return self.stack.pop()
         else:
             return None
+
     def size(self):
         return len(self.stack)
+
+    def __str__(self):
+        out = f''
+        for item in self.stack:
+            out += f'{item}'
+        return out

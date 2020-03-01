@@ -10,6 +10,8 @@ django = "*"
 djangorestframework = "*"
 psycopg2-binary = "*"
 requests = "*"
+django-environ = "*"
+python-decouple = "*"
 
 [requires]
 python_version = "3.8"

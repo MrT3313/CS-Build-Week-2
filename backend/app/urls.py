@@ -9,6 +9,16 @@ urlpatterns = [
     url('testScript/', views.Test_Script, name='testScript'),
 
     # Project
-    url('traverse/', api.Traverse.as_view(), name='traverse'),
-    path('rooms/', views.Rooms_View, name='rooms')
+    # path('rooms/', views.Rooms_View, name='rooms'),
+    path('rooms/', views.Rooms.as_view(), name='rooms'),
+
+    # Movement
+
+    # Status
+    path('status/', views.STATUS, name='status'),
+
+    # Traverse Map
+    path('traverseMap/', views.traverseMap, name='traverseMap'),
+    
+
 ]

@@ -7,6 +7,9 @@ from rest_framework.views import APIView
 # ?? 
 from django.forms.models import model_to_dict
 
+# Import Functions
+
+
 # MODELS
 # from . import models
 from .models import *
@@ -28,7 +31,5 @@ class GetRooms(APIView):
 
         return JsonResponse(response, safe=False)
 
-class Traverse(APIView):
-    def get(self, request):
-        pass
+
         
