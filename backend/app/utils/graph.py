@@ -32,8 +32,8 @@ class Graph:
         Add a directed edge to the graph.
         """
         opposite = {"n": "s", "e": "w", "s": "n", "w": "e"}
-        print(f'PASSED V1 {v1}')
-        print(f'PASSED V2 {v2}')
+        # print(f'PASSED V1 {v1}')
+        # print(f'PASSED V2 {v2}')
         # print(f'DIRECTION {direction}')
 
         # print(self.vertices[v1]["exits"][direction])
@@ -47,7 +47,7 @@ class Graph:
         # print(rooms)
         # selected = Room.objects.get(room_id=v1)
         # print(selected)
-        print(f'\n\nTHIS IS THAT SHIT\n\n')
+        
 
 
 

@@ -24,7 +24,7 @@ from .serializers import RoomSerializer
 
 # Scripts
 from .scripts.testScript import testScript
-from .scripts.movement import movement
+# from .scripts.movement import movement
 from .scripts.getStatus import getStatus
 
 # Pre Installed
@@ -135,15 +135,53 @@ def traverseMap(request):
         
         return chosen_direction
 
+    def WISE_EXPLORERE_check(world_graph, currentRoom_OBJECT, direction):
+        print(f'INSIDE WISE EXPLORER: ')
+        print(world_graph.vertices)
+        print(f'DIRECTION: {direction}')
+        print(world_graph.vertices[currentRoom_OBJECT['room_id']])
+        print(world_graph.vertices[currentRoom_OBJECT['room_id']]['exits'])
+        print(world_graph.vertices[currentRoom_OBJECT['room_id']]['exits'][direction])
+        # print(world_graph.vertices[currentRoom_OBJECT['room_id']]['exits'][direction])
+    
+        direction_result = world_graph.vertices[currentRoom_OBJECT['room_id']]['exits'][direction]
+        print(isinstance(direction_result, int))
+        print(direction_result)
+
+        # pdb.set_trace()
+
+        if isinstance(direction_result, int):
+            return direction_result
+        else:
+            return False
+
     # Move Player
     def move(direction, currentRoom_OBJECT, world_graph, traversal_path, explored_rooms):
-        opposite = {"n": "s", "e": "w", "s": "n", "w": "e"}
+        # opposite = {"n": "s", "e": "w", "s": "n", "w": "e"}
         print(f'-*- Attempting MOVEMENT: {direction} from {currentRoom_OBJECT}')
         
+        # WISE EXPLORER CHECK
+        WISE_EXPLORER_RESULT = WISE_EXPLORERE_check(world_graph, currentRoom_OBJECT, direction)
+
+
+        
         # Make New Room
+        if WISE_EXPLORER_RESULT is False:
+            JSON_DUMPS_obj = {
+                "direction": direction,
+            }
+        else:
+            JSON_DUMPS_obj = {
+                "direction": direction,
+                "next_room_id": str(WISE_EXPLORER_RESULT)
+            }
+            # pdb.set_trace()
+        print(JSON_DUMPS_obj)
+
+
         newRoom_OBJECT = requests.post(
             'https://lambda-treasure-hunt.herokuapp.com/api/adv/move/', 
-            data=json.dumps({"direction": direction}),
+            data=json.dumps(JSON_DUMPS_obj),
             headers=header).json()
         print(newRoom_OBJECT)
         # pdb.set_trace()
@@ -277,7 +315,7 @@ def traverseMap(request):
                 pass 
             # We did not find it 
             else:   
-                print(f'LOOK HERE FUCEKRS !#$%^&*^%$#$%^& 999 {filtered_exits[1]}')
+                print(f'filtered_exits[1] {filtered_exits[1]}')
                 # Enqueu
                 for direction in filtered_exits[1]:
                     print(current_vertex['exits'][direction])
@@ -459,7 +497,7 @@ def traverseMap(request):
                 # print_ALGO_status(traversal_path, currentRoom_OBJECT, explored_rooms , world_graph)
                 
 
-                for step in backtrack_RESULT:
+                for step in backtrack_RESULT[1:]:
                     print(f'-- BACKTRACKING TO ROOM WITH UNUSED EXIT!! --')
                     print(step)
                     # pdb.set_trace()
