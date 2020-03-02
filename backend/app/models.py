@@ -12,7 +12,10 @@ class Room(models.Model):
     room_id = models.IntegerField()
     title = models.CharField(max_length=50)
     description = models.TextField()
-    coordinates = models.PointField(null=True)
+    coordinates = models.CharField(max_length=50, null=True)
+    # coordinates = models.PointField(null=True)
+    elevation = models.IntegerField(null=True)
+    terrain = models.CharField(max_length=50)
     players = ArrayField(
         models.CharField(max_length=50),
         null=True
@@ -37,4 +40,4 @@ class Room(models.Model):
     )
 
     def __str__(self):
-        return self.room_id
+        return f'{self.room_id}'

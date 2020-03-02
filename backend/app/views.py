@@ -325,6 +325,41 @@ def traverseMap(request):
             
             # pdb.set_trace()
 
+    def addRoom_to_DB(room_OBJECT):
+        # {
+        #     'room_id': 239, 
+        #     'title': 'A misty room', 
+        #     'description': 'You are standing on grass and surrounded by a dense mist. You can barely make out the exits in any direction.', 
+        #     'coordinates': '(62,50)', 
+        #     'elevation': 0, 
+        #     'terrain': 'NORMAL', 
+        #     'players': [], 
+        #     'items': ['tiny treasure', 
+        #     'tiny treasure'], 
+        #     'exits': ['n', 'w'], 
+        #     'cooldown': 1.0, 
+        #     'messages': []
+        # }
+                
+        DB_room = Room(
+            room_id=room_OBJECT['room_id'],
+            title=room_OBJECT['title'],
+            description=room_OBJECT['description'],
+            coordinates=room_OBJECT['coordinates'],
+            elevation=room_OBJECT['elevation'],
+            terrain=room_OBJECT['terrain'],
+            players=room_OBJECT['players'],
+            items=room_OBJECT['items'],
+            exits=room_OBJECT['exits'],
+            cooldown=room_OBJECT['cooldown'],
+            messages=room_OBJECT['messages'],
+        )
+        print(DB_room)
+        DB_room.save()
+        # pdb.set_trace()
+
+
+
 
     def runTraversal():
         # - A - SETUP
@@ -335,6 +370,12 @@ def traverseMap(request):
         uniqueTitles = []
         # - - - - 
 
+        # Clean out current DB
+        # Delete Current Rooms
+        Room.objects.all().delete()
+        # - - - - 
+        # pdb.set_trace()
+
         # - B - STEPS
         # Player Init
         startingRoom = initialization()
@@ -342,6 +383,10 @@ def traverseMap(request):
         traversal_path.append(startingRoom['room_id'])
         world_graph.add_vertex(startingRoom, world_graph)
         DFS_STACK.push(startingRoom)
+        
+        # Add Room Object to DB 
+        print(f'STARTING ROOM: {startingRoom}')
+        # addRoom_to_DB(startingRoom)
         
         # Initiate Cooldown
         time.sleep(startingRoom['cooldown'])
@@ -359,6 +404,10 @@ def traverseMap(request):
             print(f'  __MAIN GOAL LOOP__ \n ')
             # -- GET ITEM FROM STACK --
             currentRoom_OBJECT = DFS_STACK.pop()
+            
+            if currentRoom_OBJECT['room_id'] not in explored_rooms:
+                # Add Room Object to DB 
+                addRoom_to_DB(currentRoom_OBJECT)
 
             # -- TOP OF LOOP PRINT STATUS CHECK --
             print_ALGO_status(traversal_path, currentRoom_OBJECT, explored_rooms , world_graph)
