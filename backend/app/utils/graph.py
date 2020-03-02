@@ -1,5 +1,8 @@
 import pdb
 
+from ..models import Graph_Exploration
+from ..models import Room
+
 class Graph:
     """Represent a graph as a dictionary of vertices mapping labels to edges."""
     def __init__(self):
@@ -13,10 +16,7 @@ class Graph:
         vertPrep = {
             'room_id': vertex['room_id'],
             'exits': {
-                'n': "?",
-                's': "?",
-                'e': "?",
-                'w': "?",
+                'n': "?", 's': "?", 'e': "?", 'w': "?",
             },
         }
 
@@ -32,8 +32,8 @@ class Graph:
         Add a directed edge to the graph.
         """
         opposite = {"n": "s", "e": "w", "s": "n", "w": "e"}
-        # print(f'PASSED V1 {v1}')
-        # print(f'PASSED V2 {v2}')
+        print(f'PASSED V1 {v1}')
+        print(f'PASSED V2 {v2}')
         # print(f'DIRECTION {direction}')
 
         # print(self.vertices[v1]["exits"][direction])
@@ -41,6 +41,15 @@ class Graph:
 
         self.vertices[v1]['exits'][direction] = v2
         self.vertices[v2]['exits'][opposite[direction]] = v1
+
+        # print(f'DID IT BREAK HERE ??')
+        # rooms = Room.objects.all()
+        # print(rooms)
+        # selected = Room.objects.get(room_id=v1)
+        # print(selected)
+        print(f'\n\nTHIS IS THAT SHIT\n\n')
+
+
 
         # self.print_graph()
         # pdb.set_trace()

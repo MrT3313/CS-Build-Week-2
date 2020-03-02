@@ -183,13 +183,13 @@ def traverseMap(request):
 
         if currentRoom_OBJECT['title'] in titles:
             print('LOOK THIS SHUT UP')
-            pdb.set_trace()
+            # pdb.set_trace()
 
         if currentRoom_OBJECT['title'] not in uniqueTitles:
             print(currentRoom_OBJECT['title'])
             uniqueTitles.append(currentRoom_OBJECT['title'])
             print(uniqueTitles)
-            pdb.set_trace()
+            # pdb.set_trace()
             
         # - - - - 
         return 'continue_searching'
@@ -205,6 +205,7 @@ def traverseMap(request):
         print('\n\n')
         # - - - -
         # pdb.set_trace()
+    
     def print_BACKTRACK_status(BFS_QUEUE, BFS_PATHS, curr_BFS_room, current_vertex, world_graph):
             print('\n\n\n')
 
@@ -326,6 +327,7 @@ def traverseMap(request):
             # pdb.set_trace()
 
     def addRoom_to_DB(room_OBJECT):
+        print(room_OBJECT)
         # {
         #     'room_id': 239, 
         #     'title': 'A misty room', 
@@ -340,23 +342,26 @@ def traverseMap(request):
         #     'cooldown': 1.0, 
         #     'messages': []
         # }
-                
-        DB_room = Room(
-            room_id=room_OBJECT['room_id'],
-            title=room_OBJECT['title'],
-            description=room_OBJECT['description'],
-            coordinates=room_OBJECT['coordinates'],
-            elevation=room_OBJECT['elevation'],
-            terrain=room_OBJECT['terrain'],
-            players=room_OBJECT['players'],
-            items=room_OBJECT['items'],
-            exits=room_OBJECT['exits'],
-            cooldown=room_OBJECT['cooldown'],
-            messages=room_OBJECT['messages'],
-        )
-        print(DB_room)
-        DB_room.save()
-        # pdb.set_trace()
+        try:
+            result = Room.objects.get(room_id=room_OBJECT['room_id'])
+            print(f'DONT add another room')
+        except:
+            DB_room = Room(
+                room_id=room_OBJECT['room_id'],
+                title=room_OBJECT['title'],
+                description=room_OBJECT['description'],
+                coordinates=room_OBJECT['coordinates'],
+                elevation=room_OBJECT['elevation'],
+                terrain=room_OBJECT['terrain'],
+                players=room_OBJECT['players'],
+                items=room_OBJECT['items'],
+                exits=room_OBJECT['exits'],
+                cooldown=room_OBJECT['cooldown'],
+                messages=room_OBJECT['messages'],
+            )
+            print(DB_room)
+            DB_room.save()
+            # pdb.set_trace()
 
 
 
@@ -386,7 +391,7 @@ def traverseMap(request):
         
         # Add Room Object to DB 
         print(f'STARTING ROOM: {startingRoom}')
-        # addRoom_to_DB(startingRoom)
+        addRoom_to_DB(startingRoom)
         
         # Initiate Cooldown
         time.sleep(startingRoom['cooldown'])

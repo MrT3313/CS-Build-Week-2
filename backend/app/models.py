@@ -41,3 +41,14 @@ class Room(models.Model):
 
     def __str__(self):
         return f'{self.room_id}'
+
+class Graph_Exploration(models.Model):
+    room_id = models.IntegerField()
+    n = models.CharField(max_length=5)
+    s = models.CharField(max_length=5)
+    e = models.CharField(max_length=5)
+    w = models.CharField(max_length=5)
+
+    def __str__(self):
+        return f'{self.room_id}'
+    
