@@ -50,5 +50,15 @@ class Graph_Exploration(models.Model):
     w = models.CharField(max_length=5)
 
     def __str__(self):
-        return f'{self.room_id}'
+        print_details = True
+        if print_details:
+            output = f'-*- ROOM ID/\n {self.room_id}\n'
+            output = f'-*- N/\n {self.n}\n'
+            output = f'-*- S/\n {self.s}\n'
+            output = f'-*- E/\n {self.e}\n'
+            output = f'-*- W/\n {self.w}\n'
+
+            return output
+        else:
+            return f'{self.room_id}'
     

@@ -98,12 +98,18 @@ def traverseMap(request):
         for error in response_result['errors']:
             if error not in known_errors:
                 known_errors.append(error)
+            
+
 
         return result, known_errors, known_messages
 
 
     def make_request(reqType, baseURL, slug='', header={}, data={}):
         print(f'-- TRYING TO MAKE REQUEST --')
+        debug = False
+        print_cooldown = True
+
+        # GET
         print(f'{reqType} -- {baseURL}{slug}/ -- {data}')
         if reqType == 'get' or reqType == 'Get' or reqType == 'GET':
             response_data = requests.get(baseURL + slug + '/',
@@ -111,20 +117,29 @@ def traverseMap(request):
                 headers=header
             ).json()
         # - - - -
-
+        
+        # POST
         if reqType == 'post' or reqType == 'Post' or reqType == 'POST':
             response_data = requests.post(baseURL + slug,
                 data=json.dumps(data),
                 headers=header
             ).json()
         # - - - -
-        # print(f'-*- MAKE REQUEST -- RESPONSE DATA/\n {response_data}')
+        
+        cooldown = response_data['cooldown']
+
+        # Debug
+        if debug:
+            print(response_data)
+        # - - - - 
 
         # COOLDOWN
-        print(response_data)
-        print(response_data['cooldown'])
+        if print_cooldown:
+            print(f'-*- COOLDOWN/\n{cooldown}')
         time.sleep(response_data['cooldown'])
         # - - - - 
+
+            
 
         # Error Check 
         errorCheck_RESULT = errorCheck(response_data)
@@ -136,7 +151,8 @@ def traverseMap(request):
         return response_data
 
 
-    def addRoom_to_DB(room_OBJECT):
+    def update_django_ROOM_DB(room_OBJECT):
+        debug = False
         # {
         #     'room_id': 239, 
         #     'title': 'A misty room', 
@@ -152,7 +168,20 @@ def traverseMap(request):
         #     'messages': []
         # }
         try:
+            # Debug
+            if debug:
+                print(f'-*- ROOM OBJECT/\n {room_OBJECT}')
+                print(f'-*- ROOM OBJECT/\n {room_OBJECT.room_id}')
+            # - - - - 
+            
             result = Room.objects.get(room_id=room_OBJECT['room_id'])
+
+            # Debug
+            if debug:
+                print(f'GET - room_id/\n{print(result)}\n--end of test--')
+                pdb.set_trace()
+            # - - - - 
+            
         except:
             DB_room = Room(
                 room_id=room_OBJECT['room_id'],
@@ -169,7 +198,8 @@ def traverseMap(request):
             )
             DB_room.save()
             # 
-
+        if debug:
+            print('-- -- -- -- END OF DEBUG -- -- -- --')    
 
     def randomChoice(filteredExits):
         chosen_direction = filteredExits[random.randint(0, len(filteredExits) - 1)]
@@ -179,17 +209,23 @@ def traverseMap(request):
 
 
     def wiseExplorer_check(world_graph, currentRoom_OBJECT, direction):
-        print(f'INSIDE WISE EXPLORER: ')
-        print(f'DIRECTION: {direction}')
-        # print(world_graph.vertices)
-        # print(world_graph.vertices[currentRoom_OBJECT['room_id']])
-        # print(world_graph.vertices[currentRoom_OBJECT['room_id']]['exits'])
-        print(world_graph.vertices[currentRoom_OBJECT['room_id']]['exits'][direction])
+        debug = False
+        
+        # Debug
+        if debug:
+            print(f'INSIDE WISE EXPLORER: ')
+            print(f'DIRECTION: {direction}')
+            # print(world_graph.vertices)
+            # print(world_graph.vertices[currentRoom_OBJECT['room_id']])
+            # print(world_graph.vertices[currentRoom_OBJECT['room_id']]['exits'])
+            print(world_graph.vertices[currentRoom_OBJECT['room_id']]['exits'][direction])
         # - - - - 
     
-        # what does the NEXT node on the GRAPH look like ??
+        # Get next node from graph
         direction_result = world_graph.vertices[currentRoom_OBJECT['room_id']]['exits'][direction]
+        # - - - - 
 
+        # Do we KNOW the room in that direction?
         '''
         Options: # , None , "?"
             If you get a # -- int back then you KNOW where your going 
@@ -198,6 +234,7 @@ def traverseMap(request):
             return direction_result
         else:
             return False
+        # - - - - 
 
 
     def item_interaction(item, type ='take'):
@@ -223,7 +260,6 @@ def traverseMap(request):
 
         # Get current status
         playerStatus = getStatus()
-        print(playerStatus)
         # - - - - 
 
         # Examine item or player
@@ -253,28 +289,24 @@ def traverseMap(request):
             print(interaction_RESULT)
         # - - - - 
 
-        # Get current status
-        playerStatus = getStatus()
-        print(playerStatus)
-        # - - - - 
-        if 'Heavily Encumbered: +100% CD' in result['messages']:
-            print(playerStatus)
-            
-
-        # - - - - 
-
         return result
 
 
     def getStatus():
+        debug = False
+
+        # Make Request
         result = make_request(
             'POST', 'https://lambda-treasure-hunt.herokuapp.com/api/adv/', 'status', 
             header
             # No Data
         )
-
         # - - - - 
-        print(f'status/ \n {result}')
+
+        # Debug
+        if debug: 
+            print(f'-*- STATUS/\n {result}')
+        # - - - - 
         
         return result
 
@@ -302,20 +334,48 @@ def traverseMap(request):
         # Return
         return startingRoom
 
-
-    def exploreRoom(currentRoom_OBJECT, known_titles=[], known_items=[]):
+    def exploreRoom(currentRoom_OBJECT, known_room_titles=[], known_items=[]):
         '''
         Whenever we enter a new room we want to explore it and update 
         our character in accordance with our current goal
         '''
-        if currentRoom_OBJECT['title'] not in known_titles:
-            known_titles.append(currentRoom_OBJECT['title'])
+        ##  --  ##  --  ##  --  ##
+        ##                      ##
+        ##      KNOWN ARRAYS    ##
+        ##                      ##
+        ##  --  ##  --  ##  --  ##
+        debug_knownArrays = False
+        if currentRoom_OBJECT['title'] not in known_room_titles:
+            # Debug 
+            if debug_knownArrays:
+                print(f'-*- KNOWN ROOM TITLES/\n{known_room_titles}')
+            # - - - - 
+
+            known_room_titles.append(currentRoom_OBJECT['title'])
         # - - - - 
 
-        if currentRoom_OBJECT['items'] not in known_items:
-            known_items.append(currentRoom_OBJECT['items'])
+        for item in currentRoom_OBJECT['items']:
+            # Debug 
+            if debug_knownArrays:
+                print(f'-*- KNOWN ITEMS/\n{known_items}')
+                print(item)
+            # - - - - 
+
+            if item not in known_items:
+                known_items.append(item)
         # - - - - 
 
+        # Debug
+        if debug_knownArrays:
+            pdb.set_trace()
+        # - - - - 
+
+        ##  --  ##  --  ##  --  ##
+        ##                      ##
+        ##    SPECIFIC ROOM     ##
+        ##       ACTIONS        ##
+        ##                      ##
+        ##  --  ##  --  ##  --  ##
 
         # SPECIFIC ROOM ACTIONS
         if currentRoom_OBJECT['title'] == "Pirate Ry's":
@@ -334,6 +394,16 @@ def traverseMap(request):
         if len(list_of_items) > 0: 
             for item in list_of_items:
                 print(item)
+
+                # SPECIFIC ITEM ACTIONS
+                if item == 'shiny treasure':
+                    pass
+                if item == 'tiny treasure' or item == 'small treasure':
+                    pass
+
+                # - - - - 
+
+
                 examine_results = examine(item=item)
                 print(f'EXAMIN RESULT/\n {examine_results}')
                 
@@ -347,7 +417,7 @@ def traverseMap(request):
         # - - - - 
 
         # Return
-        return known_titles
+        return known_room_titles, known_items
 
 
     def find_unused_exits(currentRoom_OBJECT, world_graph, backtrack=False):
@@ -378,19 +448,19 @@ def traverseMap(request):
 
         # Return
         if backtrack:
-            print(f'FILTERED EXITS: {backtrack_result_unexplored, backtrack_result_known}')
+            print(f'-- FILTERED EXITS/\n {backtrack_result_unexplored, backtrack_result_known}')
             return backtrack_result_unexplored, backtrack_result_known
         else:
-            print(f'FILTERED EXITS: {result}')
+            print(f'- ✅⛔️✅ => ✅✅ - FILTERED EXITS/\n {result}')
             return result
     
     
     def move(direction, currentRoom_OBJECT, world_graph, traversal_path, explored_rooms):
-        print(f'-*- Attempting MOVEMENT/\n {direction} from {currentRoom_OBJECT}')
+        print(f'- 🏃‍♂️ - Attempting MOVEMENT/\n {direction} from {currentRoom_OBJECT}')
         
         # WISE EXPLORER CHECK
         wiseExplorer_RESULT = wiseExplorer_check(world_graph, currentRoom_OBJECT, direction)
-        print(f'-*- WISE EXPLORER CHECK/\n {wiseExplorer_RESULT}')
+        print(f'- 🗺 - WISE EXPLORER CHECK/\n {wiseExplorer_RESULT}')
 
         # Set request data
         if wiseExplorer_RESULT is False:
@@ -505,6 +575,26 @@ def traverseMap(request):
                 
                 print(BFS_QUEUE_shortestPath)    
 
+    def walkPath(path, currentRoom_OBJECT, world_graph, traversal_path, explored_rooms):
+        debug = False
+        for step in path:
+            print(f'-*- FOLLOW SHORTEST PATH')
+            print(step)
+
+            # Move in that directionc
+            movementResult = move(step, currentRoom_OBJECT, world_graph, traversal_path, explored_rooms)
+            
+            currentRoom_OBJECT = movementResult[0]
+            world_graph = movementResult[1]
+            traversal_path = movementResult[2]
+        # - - - - 
+
+        # Debug
+        if debug:
+            pdb.set_trace()
+
+        # Return
+        return currentRoom_OBJECT
 
     def examine(item=None, player=None):
         # Define Data Headers
@@ -546,15 +636,17 @@ def traverseMap(request):
         world_graph = Graph()
         explored_rooms = set()
         DFS_STACK = Stack()
-        traversal_path = []
-        uniqueTitles = []
+
+        known_room_titles = []          # used in exploreRoom()
+        known_items = []                # used in exploreRoom()
+        traversal_path = []             # overall traversal path of character
         # - - - - 
 
         # Clean out current DB => Delete Current Rooms
         ''' TODO: 
             Change to check for room and only update iff needed
         '''
-        # Room.objects.all().delete()
+        Room.objects.all().delete()
         # - - - - 
 
         # - B - STEPS
@@ -567,7 +659,7 @@ def traverseMap(request):
         world_graph.add_vertex(startingRoom, world_graph)
         DFS_STACK.push(startingRoom)
         # Add Room Object to DB 
-        addRoom_to_DB(startingRoom)
+        update_django_ROOM_DB(startingRoom)
         # - - - -
         
         ##  --  ##  --  ##  --  ## 
@@ -587,13 +679,19 @@ def traverseMap(request):
             # -- GET ITEM FROM STACK --
             currentRoom_OBJECT = DFS_STACK.pop()
             print(f'-*- CURRENT ROOM/\n{currentRoom_OBJECT}')
+            
             # Add Room Object to DB 
-            if currentRoom_OBJECT['room_id'] not in explored_rooms:
-                addRoom_to_DB(currentRoom_OBJECT)
+            '''updated -- now using a more general update function'''
+            # if currentRoom_OBJECT['room_id'] not in explored_rooms:
+            update_django_ROOM_DB(currentRoom_OBJECT)
             # - - - - 
 
             # Explore room
-            known_titles = exploreRoom(currentRoom_OBJECT)
+            exploreRoom_RESULT = exploreRoom(currentRoom_OBJECT, known_room_titles, known_items)
+            print(exploreRoom_RESULT)
+            # Upade known arrays 
+            known_room_titles = exploreRoom_RESULT[0]
+            known_items = exploreRoom_RESULT[1]
             explored_rooms.add(currentRoom_OBJECT['room_id'])
             # - - - -
             
@@ -624,30 +722,65 @@ def traverseMap(request):
                 # pdb.set_trace()        
                 ## LOOP STOP
                 ## LOOP STOP
-            else:
-                # BACKTRACK
-                print('-*- START BACKTRACKING/\n')
-                backtrack_RESULT = runBacktrack(currentRoom_OBJECT, world_graph)
-                print(f'-*- THIS IS THE BACKTRACK RESULT/\n {backtrack_RESULT}')
-                # - - - - 
-                # pdb.set_trace()
+
+                # Update Status
+                playerStatus = getStatus()
+
+                # Print
+                DEBUG_mainLoop = False
+                length = 5
+                print(f'\n\n\n')
+                for i in range(length):
+                    print(f'.')
+                print(f'- 🧠  - KNOWN TITLES & ITEMS/\n {known_room_titles} // {known_items}')
+                print(f'- ❤️ - PLAYER STATUS/\n {playerStatus}')
+                print(f'- ➰  - CURRENT ROOM/]\n {currentRoom_OBJECT}')
+                print(f'')
+                print(f'- 🧭 - EXPLORED ROOMS\n {len(explored_rooms)} == {(len(explored_rooms) / 500)*100}% of 500 rooms/ {explored_rooms}')
+                for i in range(length):
+                    print(f'.')
+                print(f'\n\n\n')
                 
-                # Follow shortest path to room with unexplored exit
-                for step in backtrack_RESULT[1:]:
-                    print(f'-*- FOLLOW SHORTEST PATH')
-                    print(step)
-
-                    # Move in that direction
-                    movementResult = move(step, currentRoom_OBJECT, world_graph, traversal_path, explored_rooms)
-                    
-                    currentRoom_OBJECT = movementResult[0]
-                    world_graph = movementResult[1]
-                    traversal_path = movementResult[2]
+                time.sleep(length)
                 # - - - - 
 
+
+                # Debug
+                if DEBUG_mainLoop:
+                    pdb.set_trace()
+                # - - - - 
+
+            else:
+                DEBUG_backtrack = False
+
+                # BACKTRACK
+                print('- 🔙 ⏮  🔙 ⏮  🔙 - START BACKTRACKING/\n')
+                backtrack_RESULT = runBacktrack(currentRoom_OBJECT, world_graph)
+                # - - - - 
+                
+                # Update current room
+                currentRoom_OBJECT = walkPath(backtrack_RESULT[1:], currentRoom_OBJECT, world_graph, traversal_path, explored_rooms)
                 # Update Stack
                 DFS_STACK.push(currentRoom_OBJECT)
                 # - - - - 
+
+                # Print & Sleep
+                length = 5
+                for i in range(length):
+                    print(f'.')
+                print(f'- 🔙 ⏮  🔙 ⏮  🔙 - THIS IS THE BACKTRACK RESULT/\n {backtrack_RESULT}\n')
+                for i in range(length):
+                    print(f'.')
+                time.sleep(length)
+                # - - - - 
+
+                # Debug
+                if DEBUG_backtrack:
+                    print(f'-  ❤️  - CURRENT ROOM POST walkPath()/\n {currentRoom_OBJECT}')
+                    print(f'- 🔙 ⏮  🔙 ⏮  🔙 - THIS IS THE BACKTRACK RESULT/\n {backtrack_RESULT}\n')
+                    pdb.set_trace()
+                # - - - - 
+            
         
     runTraversal()
 
