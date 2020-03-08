@@ -43,49 +43,59 @@ target = '?'
 ## Step 3: Get Graph
 ### 3.2 -- Get GOD graph
 #### Does graph exits
-with open('GOD_graph.txt', 'w+') as json_file:
-    try:
-        data = json.load(json_file)
-        GOD_graph = data
-        for line in data:
-            print(line)
-        
-        if LIVE_print:
-            print(f'-  👼  👼  👼  - GODs got your back!')
-            print(f'-  🗺  🗺  🗺  - Heres a map 🎅🏿/\n{GOD_graph}')
 
+# VERSION 2
+
+
+# Make Initial Vertex
+graph_vertex = {
+    'room_id': current_room['room_id'],
+    'n': "?",
+    's': "?",
+    'e': "?",
+    'w': "?",
+}
+walls = [exit for exit in ['n','s','e','w',] if exit not in current_room['exits'] ]
+for exit in walls:
+    graph_vertex[exit] = None
+print(graph_vertex)
+# - - - - 
+
+# Update graphs
+## GOD_graph
+with open('GOD_graph.json', 'w+') as GOD_file:
+    try: 
+        data = json.load(GOD_file)
+        print(data)
     except:
-        GOD_graph = None
+        json.dump(graph_vertex, GOD_file)
+        
+    finally: 
         if LIVE_print:
-            print(f'-  😱  😱  😱  - GOD Graph is EMPTY!/\n{GOD_graph}')
-
-### 3.1 -- Make INSTANCE graph
+            print(f'-  🚧  🚧  🚧  - Created initial node on GOD_graph')
+            # pdb.set_trace()
+# - - - - 
+## INSTANCE_graph
 random_number = random.randint(0, 100000000000)
-# new_file = open({[random_number].txt, 'w+'} as outfile):
-# with open(random_number + '_instance', 'w+') as json_file:
-FILENAME__INSTANCE_Graph = "%instance.txt" % random_number
-with open(FILENAME__INSTANCE_Graph, 'w+') as json_file:
+FILENAME__INSTANCE_Graph = f'{random_number}_instance.json'
+
+with open(FILENAME__INSTANCE_Graph, 'w+') as INSTANCE_graph:
     try:
-        data = json.load(json_file)
-        INSTANCE_graph = data
-        for line in data:
-            print(line)
-        
-        if LIVE_print:
-            print(f'-  🗺  🗺  🗺  - Heres your map/\n{INSTANCE_graph}')
-
+        data = json.load(INSTANCE_graph)
+        print(data)
     except:
-        INSTANCE_graph = None
+        json.dump(graph_vertex, INSTANCE_graph)
+    finally:
         if LIVE_print:
-            print(f'-  😱  😱  😱  - Your map is EMPTY!/\n{INSTANCE_graph}')
+            print(f'-  🚧  🚧  🚧  - Created initial node on INSTANCE_graph')
+            # pdb.set_trace()
 ''' END -- Q: What do i know?? 
-
     - GOD_graph
     - INSTANCE_graph
 '''
 
 ''' CALL DFT '''
-DFT(target, current_room, "GOD_graph.txt", FILENAME__INSTANCE_Graph)
+DFT(target, current_room, "GOD_graph.json", FILENAME__INSTANCE_Graph)
 
 
 
