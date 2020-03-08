@@ -9,6 +9,7 @@ import json
 
 # SCRIPTS
 from utils.init_player import initialization
+from scripts.DFT import DFT
 
 from utils.random_functions import PRINT_python_project_structure
 
@@ -45,45 +46,47 @@ target = '?'
 with open('GOD_graph.txt', 'w+') as json_file:
     try:
         data = json.load(json_file)
+        GOD_graph = data
         for line in data:
             print(line)
         
-        GOD_graph = data
         if LIVE_print:
-            print('-  👼  👼  👼  - GODs got your back!')
-            print('-  🗺  🗺  🗺  - Heres a map 🎅🏿')
+            print(f'-  👼  👼  👼  - GODs got your back!')
+            print(f'-  🗺  🗺  🗺  - Heres a map 🎅🏿/\n{GOD_graph}')
 
     except:
-        if LIVE_print:
-            print('-  😱  😱  😱  - GOD Graph is EMPTY!')
         GOD_graph = None
+        if LIVE_print:
+            print(f'-  😱  😱  😱  - GOD Graph is EMPTY!/\n{GOD_graph}')
 
 ### 3.1 -- Make INSTANCE graph
 random_number = random.randint(0, 100000000000)
 # new_file = open({[random_number].txt, 'w+'} as outfile):
 # with open(random_number + '_instance', 'w+') as json_file:
-file_name = "%instance.txt" % random_number
-with open(file_name, 'w+') as json_file:
+FILENAME__INSTANCE_Graph = "%instance.txt" % random_number
+with open(FILENAME__INSTANCE_Graph, 'w+') as json_file:
     try:
         data = json.load(json_file)
+        INSTANCE_graph = data
         for line in data:
             print(line)
         
-        INSTANCE_graph = data
         if LIVE_print:
-            print('-  🗺  🗺  🗺  - Heres your map')
+            print(f'-  🗺  🗺  🗺  - Heres your map/\n{INSTANCE_graph}')
 
     except:
-        if LIVE_print:
-            print('-  😱  😱  😱  - Your map is EMPTY!')
         INSTANCE_graph = None
+        if LIVE_print:
+            print(f'-  😱  😱  😱  - Your map is EMPTY!/\n{INSTANCE_graph}')
 ''' END -- Q: What do i know?? 
 
     - GOD_graph
     - INSTANCE_graph
 '''
 
-''' Q: What are my exits?? '''
+''' CALL DFT '''
+DFT(target, current_room, "GOD_graph.txt", FILENAME__INSTANCE_Graph)
+
 
 
 

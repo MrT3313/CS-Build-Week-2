@@ -66,10 +66,17 @@ Heres to round 2
 
 -- SUNDAY --
 
-12:05 - initial commit @ clean
-12:58 - alot of setup. finally getting my first question answered: Where am i??. Not using Django and now running into new package importing issues. Setting up a new python env rn...think thats the issues
-13:11 - env & function imports working. initializing player and getting current status
-13:55 - creating or reading .txt file with open()
+12:05 - initial commit @ clean  
+12:58 - alot of setup. finally getting my first question answered: Where am i??. Not using Django and now running into new package importing issues. Setting up a new python env rn...think thats the issues  
+13:11 - env & function imports working. initializing player and getting current status  
+13:55 - creating or reading .txt file with open()  
+-- 7 min break ... -- 
+14:54 - Error again... --> 
+    ``` 
+    attempted relative import beyond top-level package
+    ```
+16:04 - close to updating GOD_graph & INSTANCE_graph data
+16:07 - updating ^^ under None case. file creation and updating working correctly
 
 
 
