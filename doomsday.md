@@ -68,7 +68,9 @@ Heres to round 2
 
 12:05 - initial commit @ clean
 12:58 - alot of setup. finally getting my first question answered: Where am i??. Not using Django and now running into new package importing issues. Setting up a new python env rn...think thats the issues
-1:11 - env & function imports working. initializing player and getting current status
+13:11 - env & function imports working. initializing player and getting current status
+13:55 - creating or reading .txt file with open()
+
 
 
     
