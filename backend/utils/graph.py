@@ -1,7 +1,8 @@
 import pdb
 
-from ..models import Graph_Exploration
-from ..models import Room
+# TODO: ⬇️ ⬇️ ⬇️ - use for integrating Django DB later
+# from ..models import Graph_Exploration
+# from ..models import Room
 
 class Graph:
     """Represent a graph as a dictionary of vertices mapping labels to edges."""
@@ -41,18 +42,6 @@ class Graph:
 
         self.vertices[v1]['exits'][direction] = v2
         self.vertices[v2]['exits'][opposite[direction]] = v1
-
-        # print(f'DID IT BREAK HERE ??')
-        # rooms = Room.objects.all()
-        # print(rooms)
-        # selected = Room.objects.get(room_id=v1)
-        # print(selected)
-        
-
-
-
-        # self.print_graph()
-        # 
 
     def print_graph(self):
         result = []

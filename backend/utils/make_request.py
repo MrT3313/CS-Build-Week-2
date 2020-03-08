@@ -2,6 +2,7 @@
 import requests
 import json
 import time
+import pdb
 
 # __ MAIN __
 def make_request(reqType, baseURL, slug='', header={}, data={}):
@@ -41,7 +42,8 @@ def make_request(reqType, baseURL, slug='', header={}, data={}):
     if print_cooldown:
         print(f'-*- COOLDOWN/\n{cooldown}')
     time.sleep(response_data['cooldown'])
-    # - - - - 
+    # - - - -
+    
 
     # Return
     return response_data
