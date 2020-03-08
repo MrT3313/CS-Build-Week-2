@@ -58,14 +58,7 @@ Steps:
     
 
 ?? JSON serialization
-``` 
-class MyUniversalEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if hasattr(obj, "__json__"):
-            return obj.__json__()
-        return json.JSONEncoder.default(self, obj)
 
-```
 First half of the day... total failure
 
 Heres to round 2
@@ -74,6 +67,8 @@ Heres to round 2
 -- SUNDAY --
 
 12:05 - initial commit @ clean
+12:58 - alot of setup. finally getting my first question answered: Where am i??. Not using Django and now running into new package importing issues. Setting up a new python env rn...think thats the issues
+1:11 - env & function imports working. initializing player and getting current status
 
 
     
