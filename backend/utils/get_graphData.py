@@ -11,6 +11,12 @@ def get_graphData(current_room, FILENAME__INSTANCE_graph):
     print('start getting GOD data')
     print('GOD_graph.json')
 
+    # get data
+    read_GOD = json.load(open('GOD_graph.json', 'r'))
+
+    # make new array for data
+    new_array = []
+    new_array.append(current_room)
     with open('GOD_graph.json', 'r+') as GOD_file: 
     # with open('GOD_graph.json', 'r+') as GOD_file: 
         try: 

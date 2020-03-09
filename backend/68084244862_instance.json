@@ -1,0 +1,56 @@
+[
+  {
+    "room_id": 103,
+    "exits": {
+      "n": "?",
+      "s": null,
+      "e": null,
+      "w": "?"
+    }
+  },
+  {
+    "room_id": 69,
+    "exits": {
+      "n": "?",
+      "s": "?",
+      "e": "?",
+      "w": null
+    }
+  },
+  {
+    "room_id": 51,
+    "exits": {
+      "n": "?",
+      "s": null,
+      "e": "?",
+      "w": "?"
+    }
+  },
+  {
+    "room_id": 220,
+    "exits": {
+      "n": null,
+      "s": null,
+      "e": null,
+      "w": "?"
+    }
+  },
+  {
+    "room_id": 145,
+    "exits": {
+      "n": "?",
+      "s": null,
+      "e": "?",
+      "w": "?"
+    }
+  },
+  {
+    "room_id": 57,
+    "exits": {
+      "n": null,
+      "s": null,
+      "e": "?",
+      "w": "?"
+    }
+  }
+]

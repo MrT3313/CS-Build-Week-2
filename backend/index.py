@@ -10,6 +10,7 @@ import json
 # SCRIPTS
 from utils.init_player import initialization
 from scripts.DFT import DFT
+from utils.make_genericRoom import make_genericRoom
 
 from utils.random_functions import PRINT_python_project_structure
 
@@ -48,20 +49,7 @@ target = '?'
 
 
 # Make Initial Vertex
-graph_vertex = {
-    'room_id': current_room['room_id'],
-    'exits': {
-        'n': "?",
-        's': "?",
-        'e': "?",
-        'w': "?",
-    }
-}
-walls = [exit for exit in ['n','s','e','w',] if exit not in current_room['exits'] ]
-for dir in graph_vertex['exits']:
-    if dir in walls:
-        print(graph_vertex['exits'][dir])
-        graph_vertex['exits'][dir] = None
+graph_vertex = make_genericRoom(current_room)
 print(graph_vertex)
 data_prep = [graph_vertex,]
 print(data_prep)
@@ -74,7 +62,6 @@ with open('GOD_graph.json', 'w+') as GOD_file:
     try: 
         GOD_data = json.load(GOD_file)
         print('we FOUND data')
-        pdb.set_trace()
     except:
         # json.dump(graph_vertex, GOD_file, indent=2)
         json.dump(data_prep, GOD_file, indent=2)
@@ -94,7 +81,7 @@ with open(FILENAME__INSTANCE_Graph, 'w+') as INSTANCE_graph:
         print(INSTANCE_data)
     except:
         # json.dump(graph_vertex, INSTANCE_graph)
-        json.dump(data_prep, INSTANCE_graph)
+        json.dump(data_prep, INSTANCE_graph, indent=2)
     finally:
         if LIVE_print:
             print(f'-  🚧  🚧  🚧  - Created initial node on INSTANCE_graph')
