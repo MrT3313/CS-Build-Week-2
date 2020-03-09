@@ -50,25 +50,34 @@ target = '?'
 # Make Initial Vertex
 graph_vertex = {
     'room_id': current_room['room_id'],
-    'n': "?",
-    's': "?",
-    'e': "?",
-    'w': "?",
+    'exits': {
+        'n': "?",
+        's': "?",
+        'e': "?",
+        'w': "?",
+    }
 }
 walls = [exit for exit in ['n','s','e','w',] if exit not in current_room['exits'] ]
-for exit in walls:
-    graph_vertex[exit] = None
+for dir in graph_vertex['exits']:
+    if dir in walls:
+        print(graph_vertex['exits'][dir])
+        graph_vertex['exits'][dir] = None
 print(graph_vertex)
-# - - - - 
+data_prep = [graph_vertex,]
+print(data_prep)
 
+# - - - - 
 # Update graphs
 ## GOD_graph
 with open('GOD_graph.json', 'w+') as GOD_file:
+    print(type(GOD_file))
     try: 
-        data = json.load(GOD_file)
-        print(data)
+        GOD_data = json.load(GOD_file)
+        print('we FOUND data')
+        pdb.set_trace()
     except:
-        json.dump(graph_vertex, GOD_file)
+        # json.dump(graph_vertex, GOD_file, indent=2)
+        json.dump(data_prep, GOD_file, indent=2)
         
     finally: 
         if LIVE_print:
@@ -81,10 +90,11 @@ FILENAME__INSTANCE_Graph = f'{random_number}_instance.json'
 
 with open(FILENAME__INSTANCE_Graph, 'w+') as INSTANCE_graph:
     try:
-        data = json.load(INSTANCE_graph)
-        print(data)
+        INSTANCE_data = json.load(INSTANCE_graph)
+        print(INSTANCE_data)
     except:
-        json.dump(graph_vertex, INSTANCE_graph)
+        # json.dump(graph_vertex, INSTANCE_graph)
+        json.dump(data_prep, INSTANCE_graph)
     finally:
         if LIVE_print:
             print(f'-  🚧  🚧  🚧  - Created initial node on INSTANCE_graph')

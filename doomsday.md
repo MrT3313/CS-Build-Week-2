@@ -77,6 +77,9 @@ Heres to round 2
     ```
 16:04 - close to updating GOD_graph & INSTANCE_graph data
 16:07 - updating ^^ under None case. file creation and updating working correctly
+18:30 - started having alot of issues w/ RETRIEVING data from the .txt file. (same error in RETRIEVING data from DJANGO in a type i could use...). Refactored to update to a .json file up to entering the DFT. 
+-- 10 min break ... --
+
 
 
 
